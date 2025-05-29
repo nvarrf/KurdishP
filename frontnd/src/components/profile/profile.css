@@ -1,0 +1,115 @@
+.profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+
+
+.profileImage {
+    border-radius: 20px;
+    object-fit: cover;
+
+}
+
+.profileName {
+    font-weight: 600;
+    font-size: 20px;
+    color: #0000009f;
+}
+
+
+
+.profileFollowCounts {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+}
+
+
+
+.profileUsername img {
+    height: 12px;
+    width: 12px;
+}
+
+.profileUsername span {
+    font-weight: 600;
+    color: #0000009f;
+}
+
+
+.profileInteractions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 34px;
+}
+
+
+
+
+.profileButtons {
+
+    display: flex;
+    cursor: pointer;
+    gap: 16px;
+    border: none;
+
+}
+
+.profileButtons button {
+    border: none;
+    padding: 12px;
+    font: bold;
+    border-radius: 20px;
+}
+
+.profileButtons button:first-child {
+    color: black;
+
+}
+
+.profileButtons button:first-child:hover {
+    background-color: grey;
+    color: white;
+}
+
+
+.profileButtons button:last-child {
+
+    background-color: red;
+    color: white;
+}
+
+.profileButtons button:last-child:hover {
+    background-color: rgb(150, 0, 0);
+    color: white;
+}
+
+/* Profile options */
+
+
+.profileOptions {
+    display: flex;
+    gap: 16px;
+    font-weight: 400;
+    margin-top: 50px;
+    margin-bottom: 16px;
+
+}
+
+.profileOptions span {
+    cursor: pointer;
+    padding: 8px 0px;
+}
+
+.profileOptions span:hover {
+    background-color: rgba(128, 128, 128, 0.39);
+}
+
+.profileOptions span.active {
+    border-bottom: 3px solid black;
+}

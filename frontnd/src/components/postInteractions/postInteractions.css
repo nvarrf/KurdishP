@@ -1,0 +1,35 @@
+.postInteractions {
+display: flex;
+justify-content: space-between;
+align-items: center;
+
+}
+
+
+.postIcons{
+    display: flex;
+  
+    justify-content: space-between;
+    align-items: center;
+    width: 100px;
+    
+    gap: 10px;
+
+}
+
+.postInteractions button{
+    border: none;
+    background-color: #ff0000;
+    cursor: pointer;
+    height: 42px;
+    width: 50px;
+    border-radius: 25%;
+    font-size: 12px;
+    color: #fff;
+    font-weight: 300;
+}
+
+.postIcons img{
+    width: 26px;
+    height: 26px;
+}
