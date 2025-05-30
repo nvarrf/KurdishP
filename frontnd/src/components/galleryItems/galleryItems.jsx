@@ -3,31 +3,32 @@ import './galleryItems.css'
 import { Link } from 'react-router'
 import Image from '../image/image'
 
-const GalleryItems = ({ items }) => {
+const GalleryItems = ({ item }) => {
 
-  const optHeight = (474 * items.height) / items.width;
+  console.log(item.media)
+  const optHeight = (474 * item.height) / item.width;
   return (
 
 
-    <>
-      {items && items.map((item) => (
 
-        <div key={item.id} className="gallery-item" style={{ gridRowEnd: `span ${Math.ceil(item.height / 100)}` }}>
-          {/* <img src={item.media} alt={item.id} /> */}
 
-          <Image src={item.media} alt={item.id} w={474} h={optHeight} />
-          <Link href={`/item/${item.id}`} className='overlay' />
-          <button className='saveButton'>Save</button>
 
-          <div className='overlayIcons'>
-            <button><Image src='./general/share.svg' alt='' /></button>
-            <button><Image src='./general/more.svg' alt='' /></button>
+    <div key={item._id} className="gallery-item" style={{ gridRowEnd: `span ${Math.ceil(item.height / 45)}` }}>
+      {/* <img src={item.media} alt={item.id} /> */}
 
-          </div>
+      <Image src={item.media} alt={item._id} w={372} h={optHeight} />
+      <Link href={`/item/${item._id}`} className='overlay' />
+      <button className='saveButton'>Save</button>
 
-        </div>
-      ))}
-    </>
+      <div className='overlayIcons'>
+        <button><Image src='./general/share.svg' alt='' /></button>
+        <button><Image src='./general/more.svg' alt='' /></button>
+
+      </div>
+
+    </div>
+
+
   )
 }
 

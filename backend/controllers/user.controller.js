@@ -58,6 +58,21 @@ const createUserController = async (req, res) => {
 
 const loginUserController = (req, res) => {
 
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+        res.status(400).json({ error: 'Missing required fields' });
+        return;
+    }
+
+    User.findOne({ username: username })
+        .then(user => {
+            if (!user) {
+                res.status(401).json({ error: 'Invalid username or password' });
+                return;
+            }
+            const isPasswordValid = bcrypt.compareSync(password, user.hashPass);
+        })
 }
 
 

@@ -12,7 +12,7 @@ const Fullsize = ({ imageSrc, onClose }) => {
 
             <div className='fullImage'>
 
-                <Image src={imageSrc || '/pins/pin6.jpeg'} alt='' w={736} />
+                <Image src={imageSrc} alt='' w={736} />
 
             </div>
 

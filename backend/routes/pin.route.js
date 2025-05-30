@@ -1,8 +1,8 @@
 const express = require('express');
 const pinRouter = express.Router();
-const { pinController } = require('../controllers/pin.controller.js');
+const { getPins } = require('../controllers/pin.controller.js');
 
-pinRouter.get('/test', pinController);
+pinRouter.get('/', getPins);
 
 
 

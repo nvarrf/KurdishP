@@ -1,6 +1,11 @@
-const pinController = (req, res) => {
+const pinModel = require("../models/pin.model");
 
-    res.json('Hello, pin!');
+
+
+const getPins = async (req, res) => {
+    const pins = await pinModel.find();
+    res.status(200).json(pins);
+
 }
 
-module.exports = { pinController } 
+module.exports = { getPins } 
