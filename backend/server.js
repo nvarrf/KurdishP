@@ -3,7 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const port = process.env.PORT;
-
+const mongoDB = require('./utils/connectDB.js');
 app.use(express.json());
 const userRouter = require('./routes/user.route.js')
 const boardRouter = require('./routes/board.route.js')
@@ -19,5 +19,7 @@ app.use('/comments', commentRouter);
 
 
 app.listen(port, () => {
+
+    mongoDB();
     console.log(`Server is running on port ${port}`);
 });
