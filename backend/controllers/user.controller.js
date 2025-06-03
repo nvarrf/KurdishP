@@ -56,7 +56,7 @@ const createUserController = async (req, res) => {
 
 }
 
-const loginUserController = (req, res) => {
+const loginUserController = async (req, res) => {
 
     const { username, password } = req.body;
 
@@ -65,7 +65,7 @@ const loginUserController = (req, res) => {
         return;
     }
 
-    User.findOne({ username: username })
+    await User.findOne({ username: username })
         .then(user => {
             if (!user) {
                 res.status(401).json({ error: 'Invalid username or password' });
@@ -75,6 +75,19 @@ const loginUserController = (req, res) => {
         })
 }
 
+const getUserController = async (req, res) => {
+    const { username } = req.params;
 
-module.exports = { createUserController, loginUserController };
+
+    const user = await User.findOne({ username });
+    const { hashPass, ...userWithoutPassword } = user.toObject();
+
+    return res.status(200).json(userWithoutPassword);
+
+
+
+}
+
+
+module.exports = { createUserController, loginUserController, getUserController };
 
