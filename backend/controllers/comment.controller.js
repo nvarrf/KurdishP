@@ -30,4 +30,36 @@ const addComment = async (req, res) => {
     res.status(200).json(newComment);
 }
 
-module.exports = { getPostComments, addComment } 
+
+const deleteComment = async (req, res) => {
+    try {
+        const { commentId } = req.params;
+        const userId = req.userId; // From verifyToken middleware
+
+        const comment = await commentModel.findById(commentId);
+
+        if (!comment) {
+            return res.status(404).json({
+                message: "Comment not found"
+            });
+        }
+
+        if (comment.user.toString() !== userId) {
+            return res.status(403).json({
+                message: "You can only delete your own comments"
+            });
+        }
+        await commentModel.findByIdAndDelete(commentId);
+
+        res.status(200).json({
+            message: "Comment deleted successfully"
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            message: "Error deleting comment",
+            error: error.message
+        });
+    }
+};
+module.exports = { getPostComments, addComment, deleteComment }

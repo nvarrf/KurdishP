@@ -7,6 +7,8 @@ import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router'
 import Gallery from '../Gallery/gallery.jsx'
 import Boards from '../Boards/Boards.jsx'
+import FollowButton from './followButton.jsx'
+
 const Profile = () => {
     const [type, setType] = useState("saved");
 
@@ -50,15 +52,14 @@ const Profile = () => {
 
 
             <div className='profileFollowCounts'>
-                <h4>4 Followers</h4>
-                <h4>5 Following</h4>
+                followers   {data.followersCount}  ·   {data.followingCount} following
 
             </div>
             <div className="profileInteractions">
                 <Image className="shareImage" src='/general/share.svg' />
                 <div className='profileButtons'>
                     <button>نامە بنێرە</button>
-                    <button>فۆڵۆو </button>
+                    <FollowButton isFollowing={data.isFollowing} username={data.username} />
                 </div>
                 < Image className="moreImage" src='/general/more.svg' />
             </div>

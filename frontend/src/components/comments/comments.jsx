@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
 
 import './comments.css'
-import Image from '../../components/image/image.jsx'
-import EmojiPicker from 'emoji-picker-react'
 import apiRequest from '../../utils/apiRequest'
 import { useQuery } from '@tanstack/react-query'
 import Comment from './comment.jsx'
 import CommentForm from './commentForm.jsx'
+import useAuthStore from '../../utils/authStore'
 
 
 const fetchComments = async ({ postId }) => {
@@ -17,7 +16,7 @@ const fetchComments = async ({ postId }) => {
 
 const Comments = ({ postId }) => {
 
-
+  const { currentUser } = useAuthStore();
 
 
 
@@ -30,7 +29,6 @@ const Comments = ({ postId }) => {
   })
 
 
-  console.log(data)
   if (isPending) return <div>Loading...</div>
   if (error) return <div>{error.message}</div>
   if (!data) return <div>No data</div>
@@ -45,7 +43,7 @@ const Comments = ({ postId }) => {
 
 
         {data.map((comment) => (
-          <Comment key={comment._id} comment={comment} />
+          <Comment key={comment._id} comment={comment} currentUserId={currentUser?._id} />
         ))}
 
       </div>

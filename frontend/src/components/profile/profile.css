@@ -23,9 +23,14 @@
 
 .profileFollowCounts {
     display: flex;
+    width: 50%;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+
+    gap: 15px;
     justify-content: center;
-    gap: 10px;
-    width: 100%;
+    width: 50%;
 }
 
 
@@ -74,6 +79,7 @@
 
 .profileButtons button:first-child:hover {
     background-color: grey;
+    cursor: pointer;
     color: white;
 }
 
@@ -81,6 +87,14 @@
 .profileButtons button:last-child {
 
     background-color: red;
+    color: white;
+    cursor: pointer;
+}
+
+
+.profileButtons button:last-child:disabled {
+    cursor: not-allowed;
+    opacity: 50%;
     color: white;
 }
 

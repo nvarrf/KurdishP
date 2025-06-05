@@ -1,9 +1,31 @@
-import React from 'react'
+import React, { use, useEffect, useState } from 'react'
 
 import './createPage.css'
 import Image from '../../components/image/image'
+import { useNavigate } from 'react-router'
+import AuthStore from '../../utils/authStore'
+
+
 
 const createPage = () => {
+
+  const { currentUser } = AuthStore();
+  const [file, setFile] = useState(null)
+  const [isEditing, setIsEditing] = useState(false)
+  const navigate = useNavigate()
+
+
+  useEffect(() => {
+    if (!currentUser) {
+      navigate('/auth')
+    }
+  }, [navigate, currentUser])
+
+
+  const preViewImageUrl = file ? URL.createObjectURL(file) : null;
+
+
+
   return (
     <div className='createPage'>
 
@@ -14,7 +36,13 @@ const createPage = () => {
       <div className="createBottom">
 
 
-        <div className="upload">
+        {preViewImageUrl ? <div className='preview'>
+
+          <img src={preViewImageUrl} alt="" />
+          <div className="editIcon">
+            <Image src="/general/edit.svg" alt="edit" w={20} h={20} />
+          </div>
+        </div> : (<><label htmlFor='file' className="upload">
           <div className="uploadTitle">
 
             <Image src="/general/upload.svg" alt="upload" w={375} h={375} />
@@ -33,7 +61,10 @@ const createPage = () => {
           </div>
           <div className='saveFromUrl'><button>ناونیشانی وێنە بە لینک
           </button></div>
-        </div>
+        </label>
+
+          <input type="file" id='file' hidden onChange={e => setFile(e.target.files[0])} /></>)}
+
         <form className="createForm">
           <div className="createFormItem">
             <label htmlFor="title">سەرنووس</label>

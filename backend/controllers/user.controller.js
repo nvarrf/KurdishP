@@ -1,5 +1,6 @@
 const User = require('../models/user.model.js');
 const bcrypt = require('bcryptjs');
+const FollowModel = require('../models/follow.model.js');
 const jwt = require('jsonwebtoken');
 const createUserController = async (req, res) => {
 
@@ -128,7 +129,45 @@ const getUserController = async (req, res) => {
     const user = await User.findOne({ username });
     const { hashPass, ...userWithoutPassword } = user.toObject();
 
-    return res.status(200).json(userWithoutPassword);
+    const followersCount = await FollowModel.countDocuments({ following: user._id });
+    const followingCount = await FollowModel.countDocuments({ follower: user._id });
+
+
+    const token = req.cookies.token;
+
+    if (!token) {
+
+        res.status(200).json({
+            ...userWithoutPassword,
+            followersCount,
+            followingCount,
+            isFollowing: false
+        });
+    }
+    else {
+        jwt.verify(token, process.env.JWT_SECRET, async (err, user) => {
+
+            if (!err) {
+                const isExists = await FollowModel.exists({
+                    follower: user.userId,
+                    following: user._id,
+                });
+                res.status(200).json({
+                    ...userWithoutPassword,
+                    followersCount,
+                    followingCount,
+                    isFollowing: isExists ? true : false
+                });
+
+            }
+
+        });
+    }
+
+
+
+
+
 
 
 
@@ -141,5 +180,32 @@ const logoutUserController = async (req, res) => {
     res.json({ message: 'Logout successful' });
 }
 
-module.exports = { createUserController, loginUserController, getUserController, logoutUserController };
+const followUserController = async (req, res) => {
+    const { username } = req.params;
+
+    const user = await User.findOne({ username });
+
+    const isFollowing = await FollowModel.exists({
+        follower: req.userId,
+        following: user._id,
+    });
+
+
+    if (isFollowing) {
+        await FollowModel.deleteOne({ follower: req.userId, following: user._id });
+        return res.status(200).json({ message: 'Unfollowed successfully' });
+    } else {
+        await FollowModel.create({ follower: req.userId, following: user._id });
+        return res.status(200).json({ message: 'Followed successfully' });
+    }
+}
+
+module.exports =
+{
+    createUserController,
+    loginUserController,
+    getUserController,
+    logoutUserController,
+    followUserController
+};
 
