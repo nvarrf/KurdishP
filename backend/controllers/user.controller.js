@@ -1,6 +1,6 @@
 const User = require('../models/user.model.js');
 const bcrypt = require('bcryptjs');
-
+const jwt = require('jsonwebtoken');
 const createUserController = async (req, res) => {
 
     const { username, displayName, email, password } = req.body;
@@ -24,6 +24,7 @@ const createUserController = async (req, res) => {
         res.status(400).json({ error: 'Password must contain at least one lowercase letter' });
         return;
     }
+
     if (!/[0-9]/.test(password)) {
         res.status(400).json({ error: 'Password must contain at least one number' });
         return;
@@ -34,45 +35,90 @@ const createUserController = async (req, res) => {
         return;
     }
 
-    // Remove this line - don't send response here
-    // res.json({ message: 'User created successfully' });
-    console.log(req.body);
+    if (!email.includes('@')) {
+        res.status(400).json({ error: 'Invalid email' });
+        return;
+    }
+
+    if (username.length < 3) {
+        res.status(400).json({ error: 'Username must be at least 3 characters long' });
+        return;
+    }
+
+    if (username.length > 15) {
+        res.status(400).json({ error: 'Username must be at most 15 characters long' });
+        return;
+    }
+
+    const existingUsername = await User.findOne({ username: username });
+    const existingEmail = await User.findOne({ email: email });
+
+    if (!username.match(/^[a-zA-Z0-9]+$/)) {
+        res.status(400).json({ error: 'Username must contain only letters and numbers' });
+        return;
+    }
+
+    if (existingUsername || existingEmail) {
+        res.status(409).json({ error: 'There is an account with the provided email or username' });
+        return;
+    }
+
 
     const hashedPassword = await bcrypt.hashSync(password, 10);
-
-    await User.create({
+    const user = await User.create({
         name: displayName,
         username: username,
         email: email,
         hashPass: hashedPassword
-    })
-        .then(user => {
-            res.status(201).json({ message: 'User created successfully', user: user });
-            console.log(user);
-        })
-        .catch(err => {
-            res.status(400).json({ error: err.message });
-        });
+    });
 
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '3h' });
+
+    res.cookie('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 30 * 24 * 60 * 60,
+    });
+
+    const { hashPass, ...userWithoutPassword } = user.toObject();
+    return res.status(201).json(userWithoutPassword);
 }
 
 const loginUserController = async (req, res) => {
 
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
-    if (!username || !password) {
+    if (!email || !password) {
         res.status(400).json({ error: 'Missing required fields' });
         return;
     }
 
-    await User.findOne({ username: username })
-        .then(user => {
-            if (!user) {
-                res.status(401).json({ error: 'Invalid username or password' });
-                return;
-            }
-            const isPasswordValid = bcrypt.compareSync(password, user.hashPass);
-        })
+    const user = await User.findOne({ email: email })
+
+    if (!user) {
+        res.status(401).json({ error: 'Invalid email or password' });
+        return;
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.hashPass);
+
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+
+    res.cookie('token', token, {
+
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 30 * 24 * 60 * 60,
+    });
+
+    if (!passwordMatch) {
+        res.status(401).json({ error: 'Invalid email or password' });
+        return;
+    }
+
+    const { hashPass, ...userWithoutPassword } = user.toObject();
+
+    return res.status(200).json(userWithoutPassword);
 }
 
 const getUserController = async (req, res) => {
@@ -89,5 +135,11 @@ const getUserController = async (req, res) => {
 }
 
 
-module.exports = { createUserController, loginUserController, getUserController };
+const logoutUserController = async (req, res) => {
+
+    res.clearCookie('token');
+    res.json({ message: 'Logout successful' });
+}
+
+module.exports = { createUserController, loginUserController, getUserController, logoutUserController };
 

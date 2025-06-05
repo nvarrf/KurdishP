@@ -12,19 +12,19 @@ import {
 
 
 
-const fetchPins = async ({ pageParam, search, userId }) => {
-  const res = await apiRequest.get(`/pins?cursor=${pageParam}&search=${search || ""}&userId=${userId || ""}`);
+const fetchPins = async ({ pageParam, search, userId, boardId }) => {
+  const res = await apiRequest.get(`/pins?cursor=${pageParam}&search=${search || ""}&userId=${userId || ""}&boardId=${boardId || ""}`);
 
   return res.data;
 }
 
 
 
-const Gallery = ({ search, userId }) => {
+const Gallery = ({ search, userId, boardId }) => {
 
   const { data, fetchNextPage, hasNextPage, status } = useInfiniteQuery({
-    queryKey: ["pins", search, userId],
-    queryFn: ({ pageParam = 0 }) => fetchPins({ pageParam, search, userId }),
+    queryKey: ["pins", search, userId, boardId],
+    queryFn: ({ pageParam = 0 }) => fetchPins({ pageParam, search, userId, boardId }),
     initialPageParam: 0,
     getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
 
@@ -34,12 +34,12 @@ const Gallery = ({ search, userId }) => {
   if (status === "pending") return "Loading...";
   if (!data) return "No data";
 
-  console.log(data)
+  // console.log(data)
 
 
   const allPins = data?.pages?.map((page) => page.pins).flat() || [];
 
-  console.log(allPins)
+  // console.log(allPins)
 
   return (
 

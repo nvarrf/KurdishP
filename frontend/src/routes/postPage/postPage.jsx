@@ -66,9 +66,9 @@ const postPage = () => {
           <PostInteractions />
           <Link to={`/${data.user.username}`} className='postUser'>
             <Image src={data.user.img || '/general/noAvatar.png'} />
-            <span> ${data.user.name}</span>
+            <span>{data.user.name}</span>
           </Link>
-          <Comments />
+          <Comments postId={data._id} />
 
         </div>
       </div>

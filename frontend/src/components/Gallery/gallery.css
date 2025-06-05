@@ -30,13 +30,13 @@
     }
 }
 
-@media (max-width: 1051px) {
+@media (max-width: 1012px) {
     .gallery {
         grid-template-columns: repeat(3, 1fr);
     }
 }
 
-@media (max-width: 813px) {
+@media (max-width: 712px) {
     .gallery {
         grid-template-columns: repeat(2, 1fr);
     }

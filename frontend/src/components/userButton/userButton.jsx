@@ -1,33 +1,65 @@
 import { useState } from 'react';
 import './userButton.css';
 import Image from '../image/image';
-export const UserButton = (props) => {
-    const currentUser = true;
+
+import apiRequest from '../../utils/apiRequest';
+import { Link, useNavigate } from 'react-router';
+import useAuthStore from '../../utils/authStore';
+
+
+
+const UserButton = () => {
+
+
+
+    const { currentUser, removeCurrentUser } = useAuthStore();
+    console.log(currentUser);
+
     const [open, setOpen] = useState(false);
+    const navigate = useNavigate();
+
+
+
     const toggleDropdown = () => {
         if (open)
             setOpen(false);
         else
             setOpen(true);
-        console.log(open);
+
+    }
+
+
+
+    const handleLogOut = async () => {
+
+        try {
+            await apiRequest.post('/users/auth/logout', {});
+
+            removeCurrentUser();
+            navigate('/auth');
+
+        } catch (err) {
+            console.log('Error:', err) // Debug log
+        }
+
+
     }
 
     return currentUser ? (
         <div className="userButton">
             <Image src='/general/arrow.svg' alt="arrow" className='arrow' onClick={toggleDropdown} />
-            <Image src='/general/noAvatar.png' alt="user" />
+            <Image src={currentUser.img || '/general/noAvatar.png'} alt="user" />
 
 
             {open && <div className='dropdownContent'>
-                <a href='/nvar' className='dpHover'>
-                    <div className="content">پڕۆفایل</div>
-                </a>
-                <a href='/' className='dpHover'>   <div className="content">ڕێکخستنەکان</div>    </a>
-                <a href='/' className='dpHover'>
-                    <div className="content">چوونەدەرەوە</div>     </a>
+
+                <Link to={`/profile/${currentUser.username}`} className="content" >پڕۆفایل</Link>
+                <Link className="content">ڕێکخستنەکان</Link>
+                <div onClick={handleLogOut} className="content" >چوونەدەرەوە</div>
+
             </div>}
         </div>
-    ) : (<a href="/login" className='loginLink'>هەژمار درووستبکە/چوونەژوورەوە </a>);
+    ) : (<a href="/auth" className='loginLink'>هەژمار درووستبکە/چوونەژوورەوە </a>);
 }
 
 export default UserButton;

@@ -50,11 +50,29 @@
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 999;
   font-size: 16px;
-  padding: 18px;
+  padding: 10px;
   border-radius: 8px;
+
+  display: flex;
+  flex-direction: column;
   text-decoration: none;
 
 
+
+}
+
+.dropdownContent .content {
+
+  margin: 20px;
+  padding: 5px;
+
+}
+
+.dropdownContent .content:hover {
+
+  background-color: #91919167;
+
+  border-radius: 8px;
 
 }
 

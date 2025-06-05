@@ -1,13 +1,13 @@
 .homepage {
-    background-color: #f3f2ef;
+    background-color: #fff;
     display: flex;
     width: 100%;
-    gap: 14px ;
+    gap: 14px;
 
 }
 
 .content {
     flex: 1;
-  
-    margin-right: 18px;
+
+    margin-right: 5px;
 }

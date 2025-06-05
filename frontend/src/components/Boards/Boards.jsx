@@ -5,6 +5,7 @@ import Image from '../image/image'
 import apiRequest from '../../utils/apiRequest'
 import { useQuery } from '@tanstack/react-query'
 import { format } from 'timeago.js'
+import { Link } from 'react-router'
 
 const fetchBoards = async ({ userId }) => {
     const res = await apiRequest.get(`/boards/${userId}`);
@@ -38,13 +39,13 @@ const Boards = ({ userId }) => {
 
                 data?.map((board) => (
 
-                    <div className='collection' key={board._id}>
+                    <Link to={`/search?boardId=${board._id}`} className='collection' key={board._id}>
                         <Image src={board.firstItem.media} alt={board.title} />
                         <div className='collectionInfo'>
                             <h2>{board.title}</h2>
                             <span>{format(board.createdAt)} <p>Pins{board.pinCount} </p>   </span>
                         </div>
-                    </div>
+                    </Link>
                 ))
 
             }

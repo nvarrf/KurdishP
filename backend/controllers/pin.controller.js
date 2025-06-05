@@ -7,6 +7,7 @@ const getPins = async (req, res) => {
     const pageNumber = Number(req.query.cursor || 0);
     const search = req.query.search || "";
     const userId = req.query.userId;
+    const boardId = req.query.boardId;
     const limit = 21;
 
     const pins = await pinModel.find(
@@ -18,7 +19,9 @@ const getPins = async (req, res) => {
 
         } : userId ?
             { user: userId }
-            : {}
+            : boardId ? {
+                board: boardId
+            } : {}
     )
         .limit(limit).skip(limit * pageNumber);
 

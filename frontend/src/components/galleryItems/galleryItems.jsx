@@ -5,7 +5,7 @@ import Image from '../image/image'
 
 const GalleryItems = ({ item }) => {
 
-  console.log(item.media)
+
   const optHeight = (474 * item.height) / item.width;
   return (
 

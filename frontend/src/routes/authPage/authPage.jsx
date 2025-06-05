@@ -1,12 +1,46 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router'
 
 import './authPage.css'
 import Image from '../../components/image/image'
+import apiRequest from '../../utils/apiRequest'
+import useAuthStore from '../../utils/authStore'
+
 const authPage = () => {
 
   const [isRegister, setIsRegister] = useState(false)
-  const [isLogin, setIsLogin] = useState(false)
-  const [error, setError] = useState(false)
+  const [error, setError] = useState('')
+
+  const navigate = useNavigate();
+  const { setCurrentUser } = useAuthStore();
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setError('') // Clear previous errors
+
+    const formData = new FormData(e.target)
+
+    const data = {
+      username: formData.get('username'),
+      displayName: formData.get('displayName'),
+      email: formData.get('email'),
+      password: formData.get('password')
+    }
+
+    try {
+      const res = await apiRequest.post(`/users/auth/${isRegister ? 'register' : 'login'}`, data)
+
+
+      setCurrentUser(res.data)
+
+      navigate('/')
+
+    } catch (err) {
+      console.log('Error:', err) // Debug log
+      setError(err.response?.data?.error)
+    }
+  }
 
   return (
     <div className='authPage'>
@@ -16,7 +50,7 @@ const authPage = () => {
 
         {isRegister ? (
 
-          <form key="registerForm">
+          <form key="registerForm" method='POST' onSubmit={handleSubmit}>
 
             <div className="formGroup">
               <label htmlFor="username">Username</label>
@@ -41,13 +75,17 @@ const authPage = () => {
             <button type='submit'>تۆمارکردن</button>
 
             <p >ئەکاونتت هەیە؟ <b onClick={() => setIsRegister(false)}> چوونەژوورەوە</b>  </p>
-            {error && <p className='error'>{error}</p>}
-          </form>)
+            {error ? <div className='handleError'> <span>{error}</span>  </div> : ''}
+
+
+          </form>
+
+        )
 
           :
 
 
-          (<form key="loginForm">
+          (<form key="loginForm" method='POST' onSubmit={handleSubmit}>
             <div className="formGroup">
               <label htmlFor="email">ئیمێڵ</label>
               <input type="email" placeholder='example@mail.com...' id="email" name='email' required />
@@ -60,8 +98,10 @@ const authPage = () => {
             <button type='submit'>چوونەژوورەوە</button>
 
             <p >ئەکاونتت نییە؟ <b onClick={() => setIsRegister(true)}>درووستی بکە</b>  </p>
-            {error && <p className='error'>{error}</p>}
+
+            {error ? <div className='handleError'> <span>{error} </span>  </div> : ''}
           </form>)}
+
 
       </div>
     </div>

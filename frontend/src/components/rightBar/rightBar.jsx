@@ -2,9 +2,9 @@ import './rightBar.css'
 import Image from '../image/image';
 import { Link } from 'react-router';
 
-const leftBar = (props) => {
+const RightBar = () => {
    return (
-      <div className="leftBar">
+      <div className="rightBar">
          <div className='menuIcons'>
 
             <Link to='#'>
@@ -30,4 +30,4 @@ const leftBar = (props) => {
       </div>
    );
 }
-export default leftBar;
+export default RightBar;
